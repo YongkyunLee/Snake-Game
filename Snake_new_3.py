@@ -27,8 +27,9 @@ class Snake:
         self.move_count = 0
     #def start_game(self, evt):
         #self.started = True
-    #dir만 받고 행동은 하지 않는다. 원래는 키보드를 누를 때 좌표가 바뀌었기 때문에 draw나 undraw가 되기 전에\
-        #좌표가 바뀌어서 undraw가 바뀐 좌표에 대해서 실행되면 안 지워지는 블럭 하나가 남았었음
+    #obtain direction at event but do not change the coordinates
+    #Before: the coordinates changed when keyboard was pressed
+    #so the undraw might have been processed before the changed coordinates were drawn
     def turn_right(self, evt):
         self.dir = 1
         self.move_count += 1
