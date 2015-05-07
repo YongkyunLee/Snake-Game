@@ -3,8 +3,9 @@ import random
 import time
 
 class Snake:
-    def __init__(self, canvas):
+    def __init__(self, canvas, fruit):
         self.canvas = canvas
+        self.fruit = fruit
         self.body = [[6, 2], [5, 2], [4, 2], [3, 2], [2, 2]]
         for x in range(0, len(self.body)):
             co_x = self.body[x][0]
@@ -24,6 +25,7 @@ class Snake:
         self.started = False
         self.det = False
         self.move_count = 0
+        self.test = False
     def turn_right(self, evt):
         self.dir = 1
         self.move_count += 1
@@ -108,16 +110,30 @@ class Snake:
             self.canvas.create_rectangle(can_x1, can_y1, can_x2, can_y2, fill="white", outline="white")
         if self.move_count == 1:
             self.canvas.create_rectangle(10, 10, 20, 20, fill="white", outline="white")
-        self.press_key = 1        
-        
+        self.press_key = 1
+    def rand_pos(self):
+        while self.test == False:
+            rand_x = random.randint(1, 50)
+            rand_y = random.randint(1, 50)
+            for x in range(0, len(self.body)):
+                if self.body[x] == [rand_x, rand_y]:
+                    self.test = False
+                    break
+                else:
+                    self.test = True
+        self.test = False
+        return [rand_x, rand_y]     
+                
 class Fruit:
     def __init__(self, canvas):
         self.canvas = canvas
         self.fruit_id = canvas.create_oval(0, 0, 10, 10, fill="red")
         self.canvas.move(self.fruit_id, 250, 250)
         self.pos = [26, 26]
-    def draw(self, co_x, co_y):
-        pos = [co_x, co_y]
+    def draw(self, rand_cord):
+        self.pos = rand_cord
+        co_x = self.pos[0]
+        co_y = self.pos[1]
         can_x1 = (co_x - 1) * 10
         can_y1 = (co_y - 1) * 10
         can_x2 = co_x * 10
@@ -137,14 +153,17 @@ snake = Snake(canvas, fruit)
 
 while 1:
     if snake.out_of_bounds() == False and snake.suicide() == False:
-        print(snake.body)
-        print(snake.move_count)
+        #print(snake.body)
+        #print(snake.move_count)
         snake.move()
         snake.draw()
         tk.update_idletasks()
         tk.update()
         time.sleep(0.05)
         snake.undraw()
+        if snake.eat() == True:
+            fruit.draw(snake.rand_pos())
+        print(fruit.pos)
         tk.update_idletasks()
         tk.update()
         #canvas.delete("all")
