@@ -7,6 +7,7 @@ class Snake:
         self.canvas = canvas
         self.fruit = fruit
         self.body = [[6, 2], [5, 2], [4, 2], [3, 2], [2, 2]]
+        self.tail = [2, 2]
         for x in range(0, len(self.body)):
             co_x = self.body[x][0]
             co_y = self.body[x][1]
@@ -89,7 +90,9 @@ class Snake:
         if self.body[0] == self.fruit.pos:
             return True
         else:
-            return False    
+            return False
+    def grow(self, tail_cord): #change self.body
+        self.body.insert(len(self.body), tail_cord)
     def draw(self):
         head_x = self.body[0][0]
         head_y = self.body[0][1]
@@ -102,6 +105,7 @@ class Snake:
     def undraw(self):
         tail_x = self.body[len(self.body)-1][0]
         tail_y = self.body[len(self.body)-1][1]
+        self.tail = [tail_x, tail_y]
         can_x1 = (tail_x - 1) * 10
         can_y1 = (tail_y - 1) * 10
         can_x2 = tail_x * 10
@@ -128,8 +132,8 @@ class Fruit:
     def __init__(self, canvas):
         self.canvas = canvas
         self.fruit_id = canvas.create_oval(0, 0, 10, 10, fill="red")
-        self.canvas.move(self.fruit_id, 250, 250)
-        self.pos = [26, 26]
+        self.canvas.move(self.fruit_id, 100, 100)
+        self.pos = [11, 11]
     def draw(self, rand_cord):
         self.pos = rand_cord
         co_x = self.pos[0]
@@ -144,7 +148,7 @@ tk = Tk()
 tk.title("Snake")
 tk.resizable(0, 0)
 tk.wm_attributes("-topmost", 1)
-canvas = Canvas(tk, width=500, height=500, bd=0, highlightthickness=0)
+canvas = Canvas(tk, width=500, height=500, bd=0, highlightthickness=0, bg="white")
 canvas.pack()
 tk.update()
 
@@ -160,10 +164,12 @@ while 1:
         tk.update_idletasks()
         tk.update()
         time.sleep(0.05)
-        snake.undraw()
         if snake.eat() == True:
+            snake.grow(snake.tail)
             fruit.draw(snake.rand_pos())
-        print(fruit.pos)
+        else:
+            snake.undraw()
+        #print(fruit.pos)
         tk.update_idletasks()
         tk.update()
         #canvas.delete("all")
@@ -171,3 +177,8 @@ while 1:
         #tk.update()
     else:
         break
+
+score = len(snake.body) - 5
+game_over = "Your Score Is %s Points!"
+canvas.create_text(250, 250, font=("Perusia", 20), text=game_over % score)
+#print(snake.body)
