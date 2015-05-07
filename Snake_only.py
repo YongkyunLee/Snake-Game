@@ -22,7 +22,7 @@ class Snake:
         self.press_key = 1
         self.dir = 0
         self.begin_move = 0
-        self.started = False
+        #self.started = False
         self.det = False
         self.move_count = 0
     #def start_game(self, evt):
