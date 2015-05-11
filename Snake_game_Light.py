@@ -21,56 +21,30 @@ class Snake:
         self.canvas.bind_all('<KeyPress-Up>', self.turn_up)
         self.canvas.bind_all('<KeyPress-Down>', self.turn_down)
         self.press_key = 1
-        self.dir = 0
+        self.dir = [1, 0]
+        self.move_list = [1, 0]
         self.begin_move = 0
-        self.started = False
         self.det = False
         self.move_count = 0
         self.test = False
     def turn_right(self, evt):
-        self.dir = 1
-        self.move_count += 1
+        self.dir = [1, 0]
+        self.move_count = 1
     def turn_left(self, evt):
-        self.dir = 2
-        self.move_count += 1
+        self.dir = [-1, 0]
+        self.move_count = 1
     def turn_up(self, evt):
-        self.dir = 3
-        self.move_count += 1
+        self.dir = [0, -1]
+        self.move_count = 1
     def turn_down(self, evt):
-        self.dir = 4
-        self.move_count += 1
+        self.dir = [0, 1]
+        self.move_count = 1
     def move(self):
         self.co_x = self.body[0][0]
         self.co_y = self.body[0][1]
-        if dir == 1: #right
-            self.body.insert(0, [self.co_x+1, self.co_y])
-            del self.body[len(self.body)-1]
-            self.press_key = 0
-        if dir == 2: #left
-            self.body.insert(0, [self.co_x-1, self.co_y])
-            del self.body[len(self.body)-1]
-            self.press_key = 0
-        if dir == 3: #up
-            self.body.insert(0, [self.co_x, self.co_y-1])
-            del self.body[len(self.body)-1]
-            self.press_key = 0
-        if dir == 4: #down
-            self.body.insert(0, [self.co_x, self.co_y+1])
-            del self.body[len(self.body)-1]
-            self.press_key = 0
-        if self.press_key == 1:
-            if self.dir == 1: #moving right
-                self.body.insert(0, [self.co_x+1, self.co_y])
-                del self.body[len(self.body)-1]
-            if self.dir == 2: #moving left
-                self.body.insert(0, [self.co_x-1, self.co_y])
-                del self.body[len(self.body)-1]
-            if self.dir == 3: #moving up
-                self.body.insert(0, [self.co_x, self.co_y-1])
-                del self.body[len(self.body)-1]
-            if self.dir == 4: #moving down
-                self.body.insert(0, [self.co_x, self.co_y+1])
-                del self.body[len(self.body)-1]
+        head = self.body[0]
+        self.body.insert(0, [head[0]+self.dir[0], head[1]+self.dir[1]])
+        del self.body[len(self.body)-1]
     def out_of_bounds(self):
         if self.body[0][0] > 50 or self.body[0][0] < 1 or self.body[0][1] > 50 or self.body[0][1] < 1:
             return True
@@ -159,7 +133,8 @@ while 1:
     if snake.out_of_bounds() == False and snake.suicide() == False:
         #print(snake.body)
         #print(snake.move_count)
-        snake.move()
+        if snake.move_count !=0:
+            snake.move()
         snake.draw()
         tk.update_idletasks()
         tk.update()
