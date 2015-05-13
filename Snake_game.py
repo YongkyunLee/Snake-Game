@@ -22,7 +22,6 @@ class Snake:
         self.canvas.bind_all('<KeyPress-Down>', self.turn_down)
         self.press_key = 1
         self.dir = 0
-        self.begin_move = 0
         self.started = False
         self.det = False
         self.move_count = 0
